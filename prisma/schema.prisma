@@ -1,0 +1,59 @@
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
+}
+
+model MSTR_PRIO {
+  mstr_prio_id   Int        @id @default(autoincrement())
+  mstr_prio_desc String     @db.VarChar(255)
+  TBL_TASK       TBL_TASK[]
+}
+
+model MSTR_STATUS {
+  mstr_status_id   Int        @id @default(autoincrement())
+  mstr_status_desc String     @db.VarChar(255)
+  TBL_TASK         TBL_TASK[]
+}
+
+model TBL_PROJECT {
+  tbl_project_id          Int        @id @default(autoincrement())
+  tbl_project_name        String     @db.VarChar(100)
+  tbl_project_desc        String?
+  tbl_project_createdAt   DateTime   @default(now())
+  tbl_project_updatedAt   DateTime   @default(now()) @updatedAt
+  TBL_TASK                TBL_TASK[]
+}
+
+model TBL_TASK {
+  tbl_task_id          Int         @id @default(autoincrement())
+  tbl_task_title       String      @db.VarChar(255)
+  tbl_task_desc         String?
+  tbl_task_dueDate     DateTime?
+  tbl_task_completedAt DateTime?
+  tbl_task_projectId   Int
+  tbl_task_userId      Int?
+  tbl_task_statusId    Int
+  tbl_task_priorityId  Int
+  tbl_task_createdAt   DateTime    @default(now())
+  tbl_task_updatedAt   DateTime    @default(now()) @updatedAt
+  MSTR_PRIO            MSTR_PRIO   @relation(fields: [tbl_task_priorityId], references: [mstr_prio_id])
+  TBL_PROJECT          TBL_PROJECT @relation(fields: [tbl_task_projectId], references: [tbl_project_id], onDelete: Cascade)
+  MSTR_STATUS          MSTR_STATUS @relation(fields: [tbl_task_statusId], references: [mstr_status_id])
+  TBL_USER             TBL_USER?   @relation(fields: [tbl_task_userId], references: [tbl_user_id])
+}
+
+
+
+model TBL_USER {
+  tbl_user_id        Int        @id @default(autoincrement())
+  tbl_user_username  String     @unique @db.VarChar(50)
+  tbl_user_email     String     @unique @db.VarChar(100)
+  tbl_user_password  String     @db.VarChar(255)
+  tbl_user_createdAt DateTime   @default(now())
+  tbl_user_updatedAt DateTime
+  TBL_TASK           TBL_TASK[]
+}
