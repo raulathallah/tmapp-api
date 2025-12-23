@@ -1,12 +1,13 @@
 const taskServices = require("../services.js/taskServices");
+const ApiResponse = require("../utils/responses/apiResponse");
 
 class TaskController {
   getAllTask = async (req, res) => {
     try {
       const tasks = await taskServices.getAllTasks();
-      res.json(tasks);
+      return ApiResponse.success(res, "Tasks retrieved successfully", tasks);
     } catch (err) {
-      res.status(500).json({ error: err.message });
+      return ApiResponse.error(res, "Failed to fetch tasks", err.message, 500);
     }
   };
 
@@ -14,22 +15,39 @@ class TaskController {
     try {
       const { id } = req.params;
       const tasks = await taskServices.getTask(id);
-      res.json(tasks);
+
+      return ApiResponse.success(
+        res,
+        "Task detail retrieved successfully",
+        tasks
+      );
     } catch (err) {
-      res.status(500).json({ error: err.message });
+      return ApiResponse.error(
+        res,
+        "Failed to fetch task detail",
+        err.message,
+        500
+      );
     }
   };
 
   createTask = async (req, res) => {
     try {
       const newTask = await taskServices.createNewTask(req.body);
-      res.status(201).json({
-        success: true,
-        message: "Task created successfully",
-        data: newTask,
-      });
+
+      return ApiResponse.success(res, "Task created successfully", newTask);
     } catch (err) {
-      res.status(400).json({ success: false, error: err.message });
+      return ApiResponse.error(res, "Failed to create task", err.message, 500);
+    }
+  };
+
+  deleteTask = async (req, res) => {
+    try {
+      const { id } = req.params;
+      const deletedTask = await taskServices.deleteTask(id);
+      return ApiResponse.success(res, "Task deleted successfully", tasks);
+    } catch (err) {
+      return ApiResponse.error(res, "Failed to delete task", err.message, 500);
     }
   };
 }

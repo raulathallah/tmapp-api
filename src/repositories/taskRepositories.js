@@ -2,8 +2,13 @@ const { connect } = require("../app");
 const prisma = require("../prisma");
 
 class TaskRepository {
-  async findAll() {
+  async getTotalTask() {
+    return await prisma.tBL_TASK.count();
+  }
+
+  async findAll(where = {}) {
     return await prisma.tBL_TASK.findMany({
+      where,
       orderBy: { tbl_task_id: "desc" },
       include: {
         MSTR_PRIO: true,
@@ -23,12 +28,7 @@ class TaskRepository {
       include: {
         MSTR_PRIO: true,
         MSTR_STATUS: true,
-        TBL_PROJECT: {
-          select: {
-            tbl_project_name: true,
-          },
-        },
-        // If you want to see who is assigned to this task
+        TBL_PROJECT: true,
         TBL_USER: {
           select: { tbl_user_username: true, tbl_user_email: true },
         },
@@ -69,6 +69,10 @@ class TaskRepository {
           connect: { mstr_status_id: Number(data.tbl_task_statusId || 1) },
         },
 
+        MSTR_ACTV: {
+          connect: { mstr_actv_id: Number(data.tbl_task_actvId) },
+        },
+
         TBL_PROJECT: {
           connect: { tbl_project_id: Number(data.tbl_task_projectId) },
         },
@@ -79,6 +83,14 @@ class TaskRepository {
               connect: { tbl_user_id: Number(data.tbl_task_userId) },
             },
           }),
+      },
+    });
+  }
+
+  async delete(taskId) {
+    return await prisma.tBL_TASK.delete({
+      where: {
+        tbl_task_id: Number(taskId),
       },
     });
   }

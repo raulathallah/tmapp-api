@@ -2,6 +2,10 @@ const { connect } = require("../app");
 const prisma = require("../prisma");
 
 class ProjectRepository {
+  async getTotalProject() {
+    return await prisma.tBL_PROJECT.count();
+  }
+
   async findAll() {
     return await prisma.tBL_PROJECT.findMany({
       orderBy: { tbl_project_id: "desc" },

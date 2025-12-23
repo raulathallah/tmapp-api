@@ -9,7 +9,7 @@ async function main() {
       { mstr_prio_desc: "Medium" },
       { mstr_prio_desc: "High" },
     ],
-    skipDuplicates: true, // important
+    skipDuplicates: true,
   });
 
   await prisma.mSTR_STATUS.createMany({
@@ -19,7 +19,24 @@ async function main() {
       { mstr_status_desc: "Done" },
       { mstr_status_desc: "On Revision" },
     ],
-    skipDuplicates: true, // important
+    skipDuplicates: true,
+  });
+
+  await prisma.mSTR_ACTV.createMany({
+    data: [{ mstr_actv_desc: "Task" }],
+    skipDuplicates: true,
+  });
+
+  await prisma.tBL_USER.createMany({
+    data: [
+      {
+        tbl_user_username: "admin",
+        tbl_user_email: "admin99999@yopmail.com",
+        tbl_user_password: "admin",
+        tbl_user_updatedAt: new Date(),
+      },
+    ],
+    skipDuplicates: true,
   });
 }
 

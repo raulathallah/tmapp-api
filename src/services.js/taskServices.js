@@ -1,18 +1,22 @@
-const taskRepository = require("../repositories/taskRepositories");
+const taskRepositories = require("../repositories/taskRepositories");
 
 class TaskService {
   async getAllTasks() {
-    return await taskRepository.findAll();
+    return await taskRepositories.findAll();
   }
 
   async getTask(taskId) {
-    return await taskRepository.find(taskId);
+    return await taskRepositories.find(taskId);
   }
 
   async createNewTask(taskData) {
     if (!taskData.tbl_task_title) throw new Error("Task title is required");
 
-    return await taskRepository.create(taskData);
+    return await taskRepositories.create(taskData);
+  }
+
+  async deleteTask(taskId) {
+    return await taskRepositories.delete(taskId);
   }
 }
 

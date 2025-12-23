@@ -13,6 +13,13 @@ model MSTR_PRIO {
   TBL_TASK       TBL_TASK[]
 }
 
+model MSTR_ACTV {
+  mstr_actv_id   Int        @id @default(autoincrement())
+  mstr_actv_desc String     @db.VarChar(255)
+  TBL_TASK       TBL_TASK[]
+}
+
+
 model MSTR_STATUS {
   mstr_status_id   Int        @id @default(autoincrement())
   mstr_status_desc String     @db.VarChar(255)
@@ -38,15 +45,16 @@ model TBL_TASK {
   tbl_task_userId      Int?
   tbl_task_statusId    Int
   tbl_task_priorityId  Int
+  tbl_task_actvId      Int
   tbl_task_createdAt   DateTime    @default(now())
   tbl_task_updatedAt   DateTime    @default(now()) @updatedAt
   MSTR_PRIO            MSTR_PRIO   @relation(fields: [tbl_task_priorityId], references: [mstr_prio_id])
   TBL_PROJECT          TBL_PROJECT @relation(fields: [tbl_task_projectId], references: [tbl_project_id], onDelete: Cascade)
   MSTR_STATUS          MSTR_STATUS @relation(fields: [tbl_task_statusId], references: [mstr_status_id])
   TBL_USER             TBL_USER?   @relation(fields: [tbl_task_userId], references: [tbl_user_id])
+  MSTR_ACTV            MSTR_ACTV?   @relation(fields: [tbl_task_actvId], references: [mstr_actv_id])
+  TBL_CMTS             TBL_CMTS[]
 }
-
-
 
 model TBL_USER {
   tbl_user_id        Int        @id @default(autoincrement())
@@ -56,4 +64,16 @@ model TBL_USER {
   tbl_user_createdAt DateTime   @default(now())
   tbl_user_updatedAt DateTime
   TBL_TASK           TBL_TASK[]
+  TBL_CMTS           TBL_CMTS[]
+}
+
+model TBL_CMTS {
+  tbl_cmts_id         Int       @id @default(autoincrement())
+  tbl_cmts_taskId     Int
+  tbl_cmts_userId     Int
+  tbl_cmts_desc       String    @db.VarChar(255)
+  tbl_cmts_createdAt  DateTime  @default(now())
+  tbl_cmts_updatedAt  DateTime     
+  TBL_TASK TBL_TASK @relation(fields: [tbl_cmts_taskId], references: [tbl_task_id], onDelete: Cascade)
+  TBL_USER TBL_USER @relation(fields: [tbl_cmts_userId], references: [tbl_user_id]) 
 }

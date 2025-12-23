@@ -1,12 +1,22 @@
 const priorityServices = require("../services.js/priorityServices");
+const ApiResponse = require("../utils/responses/apiResponse");
 
 class PriorityController {
   getAllPriorities = async (req, res) => {
     try {
       const priority = await priorityServices.getAllPriorities();
-      res.json(priority);
+      return ApiResponse.success(
+        res,
+        "Priority retrieved successfully",
+        priority
+      );
     } catch (err) {
-      res.status(500).json({ error: err.message });
+      return ApiResponse.error(
+        res,
+        "Failed to fetch priority",
+        err.message,
+        500
+      );
     }
   };
 }

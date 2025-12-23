@@ -5,6 +5,11 @@ class StatusRepository {
     return await prisma.mSTR_STATUS.findMany();
   }
 
+  /*
+  {
+    "tbl_task_statusId": 1
+  }
+  */
   async updateStatusTask(taskId, data) {
     return await prisma.tBL_TASK.update({
       where: {
