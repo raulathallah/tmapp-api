@@ -6,7 +6,7 @@ class StatusService {
   }
 
   async updateStatusTask(taskId, data) {
-    if (!taskId) throw new Error("Task status is required");
+    if (!taskId) throw new Error("Task ID is required");
     if (!data.tbl_task_statusId) throw new Error("Task status is required");
 
     return await statusRepositories.updateStatusTask(taskId, data);

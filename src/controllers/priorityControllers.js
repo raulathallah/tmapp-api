@@ -19,6 +19,20 @@ class PriorityController {
       );
     }
   };
+
+  updatePriorityTask = async (req, res) => {
+    try {
+      const { id } = req.params;
+      const newTask = await priorityServices.updatePriorityTask(id, req.body);
+      res.status(201).json({
+        success: true,
+        message: "Task priority updated successfully",
+        data: newTask,
+      });
+    } catch (err) {
+      res.status(400).json({ success: false, error: err.message });
+    }
+  };
 }
 
 module.exports = new PriorityController();
